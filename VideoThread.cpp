@@ -3,7 +3,6 @@
 VideoThread::VideoThread(QObject *parent)
     : QThread(parent)
 {
-
 }
 
 void VideoThread::stop()
@@ -49,14 +48,14 @@ void VideoThread::run()
       m_running = false;
     }
 
-    int fps = 1000/60;
+    int fps = 1000 / 60;
 
     QElapsedTimer timer;
     timer.start();
 
     HumanDetector detector;
 
-    while(m_running)
+    while (m_running)
     {
         if (timer.elapsed() >= fps)
         {
@@ -68,17 +67,9 @@ void VideoThread::run()
             if (frame.empty())
               break;
 
-            //!---------------------------------------------
-            cv::Mat back = cv::Mat::zeros(frame.rows, frame.cols, CV_8UC1);
-            QElapsedTimer timer;
-            timer.start();
-            detector.detect(frame, back);
-            qDebug()<<timer.elapsed();
-
-            //!---------------------------------------------
+            detector.detect(frame);
 
             emit sendFrame(mat2pixmap(frame, false), 1);
-            emit sendFrame(mat2pixmap(back, true), 2);
 
             timer.start();
         }
